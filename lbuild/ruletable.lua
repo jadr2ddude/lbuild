@@ -4,7 +4,7 @@ local runner = require("lbuild.runner")
 local ffi = require("ffi")
 
 ffi.cdef[[
-int lbuild_util_isNewer(char *a, char *b);
+int lbuild_util_isNewer(const char *a, const char *b);
 char *strerror(int errnum);
 bool exists(const char path[]);
 ]]
@@ -54,8 +54,8 @@ end
 
 --returns whether file a is newer than b
 function ruletbl:cmptime(a, b)
-    local res = lbuild_util:lbuild_util_isNewer(a, b)
-    if res == 1 then
+    local res = lbuild_util.lbuild_util_isNewer(a, b)
+    if res ~= 0 then
         return true
     else
         return false
@@ -108,6 +108,7 @@ function ruletbl:run(name)
             local depcb = function(deps)
                 rule.state = "deps"
                 local runcb = function()
+                    rule.state = "done"
                     for _, cb in ipairs(rule.cb) do
                         cb()
                     end
@@ -115,8 +116,7 @@ function ruletbl:run(name)
                 local n = #deps + 1
                 local ischng = false
                 local startcb = function(chng)
-                    if chng then
-                        rule.state = "done"
+                    if not chng then
                         runcb()
                     else
                         rule:run():prom(runcb)
@@ -130,9 +130,13 @@ function ruletbl:run(name)
                     end
                 end
                 for _, dep in ipairs(deps) do
-                    rt:run(dep):prom(depfcb)
+                    local a = dep
+                    rt:run(dep):prom(function()
+                        local isnew = rt:cmptime(a, name)
+                        depfcb(isnew)
+                    end)
                 end
-                depfcb(false)
+                depfcb(#deps == 0)
             end
             local dps = rule:deps()
             if dps == nil then

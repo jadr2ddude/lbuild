@@ -84,6 +84,7 @@ function runner:wait()
         end
         self.pt[pid] = nil
         op.pid = nil
+        self.n = self.n - 1
     else
         error("Nothing running")
     end
