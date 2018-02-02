@@ -11,7 +11,7 @@ function path:getext(p)
 end
 
 function path:filename(p)
-    return string.match(p, "[%a%.]+$")
+    return string.match(p, "[%a%.%-]+$")
 end
 
 function path:basename(p)
