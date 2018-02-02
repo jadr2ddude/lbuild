@@ -77,6 +77,10 @@ function runner:wait()
     if self.n > 0 then
         local pid, code = wpid()
         local op = self.pt[pid]
+        --if it is a subprocess
+        if op == nil then
+            return
+        end
         if code == 0 then
             op.finish()
         else
