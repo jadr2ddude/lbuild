@@ -3,15 +3,15 @@
 local path = {}
 
 function path:stripext(p)
-    return string.gsub(p, "%.[%a%.]+$", "")
+    return string.gsub(p, "%.[^/]+$", "")
 end
 
 function path:getext(p)
-    return string.match(p, "%.[%a%.]+$")
+    return string.match(p, "%.[^/]+$")
 end
 
 function path:filename(p)
-    return string.match(p, "[%a%.%-]+$")
+    return string.match(p, "[^/]+$")
 end
 
 function path:basename(p)
@@ -20,7 +20,7 @@ end
 
 function path:dirname(p)
     if string.match(p, "/") then
-        return string.gsub(p, "/[%a%-%.]+$", "")
+        return string.gsub(p, "/[^/]+$", "")
     end
 end
 
