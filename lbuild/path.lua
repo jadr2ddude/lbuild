@@ -20,7 +20,7 @@ end
 
 function path:dirname(p)
     if string.match(p, "/") then
-        return string.gsub(p, "/[%a%.]+$", "")
+        return string.gsub(p, "/[%a%-%.]+$", "")
     end
 end
 
