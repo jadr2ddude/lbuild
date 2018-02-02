@@ -9,6 +9,7 @@
 #include<errno.h>
 #include<stdio.h>
 #include<string.h>
+#include<time.h>
 
 //fork/exec with child set to sudoku when the parent dies
 pid_t lbuild_util_fexec(char *const argv[]) {
@@ -26,7 +27,7 @@ pid_t lbuild_util_fexec(char *const argv[]) {
     }
 }
 
-int lbuild_util_isNewer(char *a, char *b) {
+int lbuild_util_isNewer(const char *a, const char *b) {
     struct stat sa, sb;
     if(stat(a, &sa) != 0) {
         return -1;
@@ -34,7 +35,7 @@ int lbuild_util_isNewer(char *a, char *b) {
     if(stat(b, &sb) != 0) {
         return -1;
     }
-    if(sa.st_mtim.tv_sec >= sb.st_mtim.tv_sec) {
+    if(difftime(sa.st_mtime, sb.st_mtime) > 0) {
         return 1;
     }
     return 0;
