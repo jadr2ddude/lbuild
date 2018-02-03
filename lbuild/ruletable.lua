@@ -75,6 +75,7 @@ end
 
 --run a rule (returns a promise)
 function ruletbl:run(name)
+    print("run", name)
     local rt = self
     --get rule
     local rule = self.rules[name]
