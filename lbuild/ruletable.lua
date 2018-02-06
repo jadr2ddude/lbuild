@@ -110,6 +110,10 @@ function ruletbl:run(name)
                     for _, cb in ipairs(rule.cb) do
                         cb()
                     end
+                    rule.cb = nil
+                    rule.deplst = nil
+                    rule.deps = nil
+                    rule.run = nil
                 end
                 local n = #deps + 1
                 local ischng = false
