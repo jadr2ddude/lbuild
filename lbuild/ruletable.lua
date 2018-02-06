@@ -75,7 +75,6 @@ end
 
 --run a rule (returns a promise)
 function ruletbl:run(name)
-    print("run", name)
     local rt = self
     --get rule
     local rule = self.rules[name]
@@ -97,9 +96,6 @@ function ruletbl:run(name)
             if rule.state == "done" then
                 success()
             else
-                if rule.cb ~= nil then
-                    rule.cb = {}
-                end
                 rule.cb[#rule.cb + 1] = success
             end
         else                    --otherwise start it
@@ -108,6 +104,7 @@ function ruletbl:run(name)
             rule.cb = {success}
             local depcb = function(deps)
                 rule.state = "deps"
+                rule.deplst = deps
                 local runcb = function()
                     rule.state = "done"
                     for _, cb in ipairs(rule.cb) do
