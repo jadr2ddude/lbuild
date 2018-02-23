@@ -90,6 +90,9 @@ function runner:wait()
         op.pid = nil
         self.n = self.n - 1
     else
+        if runner.ondeadlock then
+            runner.ondeadlock()
+        end
         error("Nothing running")
     end
 end

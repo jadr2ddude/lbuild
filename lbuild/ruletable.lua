@@ -169,4 +169,15 @@ ruletable:addgenerator(function(name)
     return nil
 end)
 
+runner.ondeadlock = function()
+    print("Deadlock!")
+    print("Incomplete operations:")
+    for i, v in pairs(ruletbl.rules) do
+        if v.state ~= "done" and v.state then
+            print(string.format("\t%s (%s)", i, v.state))
+        end
+    end
+    error("deadlock")
+end
+
 return ruletable
